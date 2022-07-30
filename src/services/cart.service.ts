@@ -1,20 +1,32 @@
 import {
-  TCart,
   TCartInput,
   TCreateCartProductsInput,
   cartStatus,
   paymentStatus,
 } from '../types/types';
-import CartsModel from '../models/carts.model';
-import PaymentsModel from '../models/payments.model';
-import UsersModel from '../models/users.model';
-import ProductsModel from '../models/products.model';
+import { Cart } from '../models/carts.model';
+import { Payment } from '../models/payments.model';
+import { User } from '../models/users.model';
+import { Product } from '../models/products.model';
 
 class CartService {
+  constructor(
+    private cart: Cart = new Cart(),
+    private user: User = new User(),
+    private product: Product = new Product(),
+    private payment: Payment = new Payment()
+  ) {}
+
   async createCart(cart: TCartInput) {
-    const user = await UsersModel.findById(cart.userId);
-    const payment = new PaymentsModel();
-    const newCart = new CartsModel(cart);
+    const user = await this.user.model.findById(cart.userId);
+
+    if (!user) {
+      return new Error('user not exist');
+    }
+
+    const payment = new this.payment.model();
+    const newCart = new this.cart.model(cart);
+
     payment.cartId = newCart._id;
     if (cart.products) {
       newCart.products = await this.calcPrice(cart.products);
@@ -26,15 +38,15 @@ class CartService {
 
   async updateCart(cart: TCartInput) {
     const newProducts = await this.calcPrice(cart.products);
-    return await CartsModel.updateOne(
+    return await this.cart.model.updateOne(
       { userId: cart.userId },
       { $set: { products: newProducts } }
     );
   }
 
   async deleteCart(cart: TCartInput) {
-    const existingCart = await CartsModel.findOne({ userId: cart.userId });
-    const existingPayment = await PaymentsModel.findOne({
+    const existingCart = await this.cart.model.findOne({ userId: cart.userId });
+    const existingPayment = await this.payment.model.findOne({
       cartId: existingCart!._id,
     });
     if (existingCart) {
@@ -51,7 +63,7 @@ class CartService {
   async calcPrice(products: TCreateCartProductsInput[]) {
     const ids = products.map((product) => product.productId);
 
-    const dbProducts = await ProductsModel.find({ _id: { $in: ids } });
+    const dbProducts = await this.product.model.find({ _id: { $in: ids } });
 
     return dbProducts.map((prod) => {
       const product = products.find((item) => item.productId === prod.id);

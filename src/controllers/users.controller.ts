@@ -1,20 +1,18 @@
 import { Request, Response } from 'express';
 import UserService from '../services/user.service';
+import HttpController from './http.controlle';
 
-import {
-  formatSuccessResponse,
-  formatErrorResponse,
-} from '../services/http.service';
-
-class UsersController {
-  constructor(private userService: UserService) {}
+class UsersController extends HttpController {
+  constructor(private userService: UserService) {
+    super();
+  }
   async createUser(req: Request, res: Response) {
     try {
       const user = await this.userService.createUser(req.body);
-      return formatSuccessResponse(res, user);
+      return this.formatSuccessResponse(res, user);
     } catch (error: any) {
       console.log(error);
-      return formatErrorResponse(res, error);
+      return this.formatErrorResponse(res, error);
     }
   }
 }

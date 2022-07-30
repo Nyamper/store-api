@@ -1,20 +1,18 @@
 import { Request, Response } from 'express';
 import ProductsService from '../services/products.service';
+import HttpController from './http.controlle';
 
-import {
-  formatSuccessResponse,
-  formatErrorResponse,
-} from '../services/http.service';
-
-class ProductsController {
-  constructor(private productsService: ProductsService) {}
+class ProductsController extends HttpController {
+  constructor(private productsService: ProductsService) {
+    super();
+  }
   async createProduct(req: Request, res: Response) {
     try {
       const product = await this.productsService.addProducts(req.body);
-      return formatSuccessResponse(res, product);
+      return this.formatSuccessResponse(res, product);
     } catch (error: any) {
       console.log(error);
-      return formatErrorResponse(res, error);
+      return this.formatErrorResponse(res, error);
     }
   }
 }

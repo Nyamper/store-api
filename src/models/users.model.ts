@@ -1,6 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
-const usersSchema = new Schema(
+import { modelMixIn } from '../mixins';
+
+import { TUser } from '../types/types';
+
+const usersSchema = new Schema<TUser>(
   {
     name: { type: String, require: true },
     email: { type: String, require: true },
@@ -8,4 +12,8 @@ const usersSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-export default model('users', usersSchema);
+export class User extends modelMixIn<TUser>('users', usersSchema) {
+  async getUserById(_id: Types.ObjectId) {
+    return this.model.findById(_id);
+  }
+}

@@ -1,11 +1,11 @@
 import { TUser } from '../types/types';
-import UserModel from '../models/users.model';
+import { User } from '../models/users.model';
 
 class UserService {
+  constructor(private user: User = new User()) {}
   async createUser(user: TUser) {
-    const newUser = new UserModel(user);
-    await newUser.save();
-    return newUser;
+    const newUser = new this.user.model(user);
+    return await newUser.save();
   }
 }
 

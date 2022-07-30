@@ -12,6 +12,11 @@ export enum paymentStatus {
   CANCELED = 'canceled',
 }
 
+export type TPayment = {
+  cartId: Types.ObjectId;
+  status: paymentStatus;
+};
+
 export type TProduct = {
   _id: Types.ObjectId;
   name: string;

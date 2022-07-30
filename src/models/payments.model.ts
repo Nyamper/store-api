@@ -1,8 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
-import { paymentStatus } from '../types/types';
+import { modelMixIn } from '../mixins';
 
-const paymentsSchema = new Schema(
+import { paymentStatus, TPayment } from '../types/types';
+
+const paymentsSchema = new Schema<TPayment>(
   {
     cartId: {
       type: Schema.Types.ObjectId,
@@ -19,4 +21,10 @@ const paymentsSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-export default model('payments', paymentsSchema);
+export class Payment extends modelMixIn<TPayment>('payments', paymentsSchema) {
+  async setPaymentToDone(_id: Types.ObjectId) {
+    return await this.model.findByIdAndUpdate(_id, {
+      status: paymentStatus.DONE,
+    });
+  }
+}

@@ -1,4 +1,7 @@
 import { Schema, model } from 'mongoose';
+
+import { modelMixIn } from '../mixins';
+
 import { TProduct } from '../types/types';
 
 const productsSchema = new Schema<TProduct>(
@@ -10,4 +13,4 @@ const productsSchema = new Schema<TProduct>(
   { versionKey: false, timestamps: true }
 );
 
-export default model('products', productsSchema);
+export class Product extends modelMixIn<TProduct>('products', productsSchema) {}
