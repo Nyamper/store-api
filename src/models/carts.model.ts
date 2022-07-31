@@ -28,4 +28,8 @@ export class Cart extends modelMixIn<TCart>('carts', cartsSchema) {
   async setStatusPayed(_id: Types.ObjectId) {
     return this.model.findByIdAndUpdate(_id, { status: cartStatus.PAYED });
   }
+
+  async setStatusDelete(_id: Types.ObjectId) {
+    return this.model.findByIdAndUpdate(_id, { status: cartStatus.DELETED });
+  }
 }

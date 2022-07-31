@@ -37,10 +37,10 @@ export type TCart = {
   status: string;
 };
 
-export type TUser = {
-  name: string;
-  email: string;
-};
+// export type TUser = {
+//   name: string;
+//   email: string;
+// };
 
 export type TCreateCartProductsInput = {
   productId: Types.ObjectId;
@@ -50,4 +50,23 @@ export type TCreateCartProductsInput = {
 export type TCartInput = {
   userId: Types.ObjectId;
   products: TCreateCartProductsInput[];
+};
+
+export type TUserInput = {
+  username: string;
+  password: string;
+};
+
+export type TUser = {
+  _id?: string;
+  username: string;
+  password: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  token?: string;
+};
+
+export type TContext = {
+  token?: string;
+  user?: TUser;
 };

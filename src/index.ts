@@ -1,18 +1,31 @@
 import { Request, Response, NextFunction } from 'express';
 import express from 'express';
 
+import 'reflect-metadata';
+
 import mongoose from 'mongoose';
 
 import router from './routes/';
+import accessTokenMiddleware from './middlewares/accessToken.middleware';
+
+import { TContext } from './types/types';
 
 const { PORT, MONGO_URI } = process.env;
+
+declare global {
+  namespace Express {
+    interface Request {
+      context?: TContext;
+    }
+  }
+}
 
 const app = express();
 app.use(express.urlencoded());
 
 app.use(express.json());
 
-app.use('/api', router);
+app.use('/api', accessTokenMiddleware, router);
 
 app.use('/', (req, res) => {
   res.send('hello world');

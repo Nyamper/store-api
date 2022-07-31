@@ -27,4 +27,10 @@ export class Payment extends modelMixIn<TPayment>('payments', paymentsSchema) {
       status: paymentStatus.DONE,
     });
   }
+
+  async setPaymentToCancel(_id: Types.ObjectId) {
+    return await this.model.findByIdAndUpdate(_id, {
+      status: paymentStatus.CANCELED,
+    });
+  }
 }

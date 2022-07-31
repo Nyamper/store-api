@@ -6,7 +6,7 @@ import {
 } from '../types/types';
 import { Cart } from '../models/carts.model';
 import { Payment } from '../models/payments.model';
-import { User } from '../models/users.model';
+import { User } from '../models/user.model';
 import { Product } from '../models/products.model';
 
 class CartService {
@@ -49,14 +49,11 @@ class CartService {
     const existingPayment = await this.payment.model.findOne({
       cartId: existingCart!._id,
     });
-    if (existingCart) {
-      existingCart.status = cartStatus.DELETED;
+    if (existingCart && existingPayment) {
+      this.payment.setPaymentToCancel(existingPayment._id);
+      this.cart.setStatusDelete(existingCart._id);
     }
-    if (existingPayment) {
-      existingPayment.status = paymentStatus.CANCELED;
-    }
-    await existingCart!.save();
-    await existingPayment!.save();
+
     return existingCart;
   }
 

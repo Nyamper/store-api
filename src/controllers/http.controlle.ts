@@ -14,7 +14,7 @@ class HttpController {
     return res.status(200).json(this.formatResponse(false, data));
   };
 
-  protected formatErrorResponse = (res: Response, error: Error) => {
+  protected formatErrorResponse = (res: Response, error: any) => {
     return res.status(400).json(this.formatResponse(true, error));
   };
 }
