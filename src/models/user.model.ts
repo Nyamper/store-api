@@ -1,4 +1,5 @@
-import { model, Schema, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Service } from 'typedi';
 
 import { TUser } from '../types/types';
 
@@ -13,6 +14,7 @@ const userSchema = new Schema<TUser>(
   { versionKey: false, timestamps: true }
 );
 
+@Service()
 export class User extends modelMixIn<TUser>('user', userSchema) {
   async getUserById(_id: Types.ObjectId) {
     return this.model.findById(_id);

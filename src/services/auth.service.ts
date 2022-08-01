@@ -4,9 +4,6 @@ import { Document } from 'mongoose';
 import { User } from '../models/user.model';
 import { TUserInput, TUser } from '../types/types';
 
-import { Service } from 'typedi';
-
-@Service()
 class AuthService {
   constructor(private user: User = new User()) {}
   public async loginUser(params: TUserInput) {

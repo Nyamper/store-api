@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
 
-import { Service, Container } from 'typedi';
-
 import AuthService from '../services/auth.service';
 import HttpController from './http.controlle';
 
-@Service()
 export class AuthController extends HttpController {
   constructor(private authService: AuthService) {
     super();
   }
+
   async registerUser(req: Request, res: Response) {
     try {
       const user = await this.authService.registerUser(req.body);
@@ -39,7 +37,3 @@ export class AuthController extends HttpController {
     }
   }
 }
-
-export const controller = Container.get(AuthController);
-
-export default AuthController;
